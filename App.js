@@ -5,31 +5,69 @@
 import { StatusBar } from 'expo-status-bar'; // controls status bar
 import React, { useState } from 'react'; // allows me to manage state in a component
 import { StyleSheet, TextInput, Image, View, Text, TouchableOpacity } from 'react-native'; // components used to build UI
+import {FIREBASE_AUTH} from './FirebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
 
 export default function App() { 
-  const [username, setUsername] = useState('');  // state variable = username w/ empty string, function = setUsername which will update it.
+  const [email, setEmail] = useState('');  // state variable = username w/ empty string, function = setUsername which will update it.
   const [password, setPassword] = useState('');  // same goes for password.
+  const [loading,setLoading]= useState(false);//loading state
+  const auth =FIREBASE_AUTH; //firebase auth
+  
+ 
+  
+  const Login =  async () => {//login using firebase
+    
+     setLoading(true);
+      
+      try{
+        const response = await signInWithEmailAndPassword(auth,email,password);
+        console.log(response);
 
-  const Login = () => { // once we have firebase set up this can direct user to main paige.
-    alert(`Will go to home page eventually.`); 
-  };
+      }catch(error){
+        console.log(error);
+        alert('Sign in failed: '+error.message);
 
-  const SignUp = () => { // same for signup but will direct user to registration page.
-    alert('Will eventually go to account registration.');
+      }finally{
+        setLoading(false);
+      }
+      
+    
+    
+    };
+
+  const SignUp = async () => { //signup using firebase
+   
+    
+    setLoading(true);
+    try{
+      const response = await createUserWithEmailAndPassword(auth,email,password);
+      console.log(response);
+      alert('Check your emails!');
+    }catch(error){
+      console.log(error);
+      alert('Sign up failed: '+ error.message);
+    }finally{
+      setLoading(false);
+    } 
+    
   };
+  
 
   return (
     // container view component. View holds all elements of the apps interface. defines the styles for the layout
     <View style={styles.container}> 
       <Image
-        source={require('/Users/ccornell11/EagleNest/assets/logo.png')}
+        source={require('./assets/logo.png')}
         style={styles.logo}
       />
       <TextInput
         style={styles.input} // component for username and applies style.
-        placeholder="Username" // shown in the box until the user inputs anything.
-        onChangeText={setUsername} // calls function and updates username when text changes.
-        value={username} // saves the input to username state
+        placeholder="Email" // shown in the box until the user inputs anything.
+        onChangeText={setEmail} // calls function and updates username when text changes.
+        value={email} // saves the input to username state
         placeholderTextColor="#666" // color of username text
       />
       <TextInput
