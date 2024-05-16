@@ -24,11 +24,20 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   const handleSignUp = async () => {
+    
     setLoading(true);
     try {
+      const domain = email.split('@')[1];
+      if(domain !== 'ewu.edu'){
+        throw new Error("Email not an eastern one!");
+      }
+      else{
       const response = await createUserWithEmailAndPassword(auth, email, password);
+      
+      
       console.log(response);
       alert('Check your emails!');
+      }
     } catch (error) {
       console.log(error);
       alert('Sign up failed: ' + error.message);
