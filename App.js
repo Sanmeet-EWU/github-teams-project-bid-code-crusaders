@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Login from './Login';
+import HomePage from './HomePage';
 import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
@@ -15,7 +16,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
-        <Text>Welcome, {user.email}!</Text>
+        <HomePage user = {user} />
       ) : (
         <Login onLoginSuccess={handleLoginSuccess} />
       )}
