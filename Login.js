@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Image, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { FIREBASE_AUTH } from './FirebaseConfig';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLoginSuccess, onRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,33 +14,10 @@ const Login = ({ onLoginSuccess }) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log(response);
-      onLoginSuccess(response.user); // Call the onLoginSuccess function passed as a prop
+      onLoginSuccess(response.user);
     } catch (error) {
       console.log(error);
       alert('Sign in failed: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignUp = async () => {
-    
-    setLoading(true);
-    try {
-      const domain = email.split('@')[1];
-      if(domain !== 'ewu.edu'){
-        throw new Error("Email not an eastern one!");
-      }
-      else{
-      const response = await createUserWithEmailAndPassword(auth, email, password);
-      
-      
-      console.log(response);
-      alert('Check your emails!');
-      }
-    } catch (error) {
-      console.log(error);
-      alert('Sign up failed: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -74,8 +51,8 @@ const Login = ({ onLoginSuccess }) => {
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+          <TouchableOpacity onPress={onRegister}> {/* */}
+            <Text style={styles.toggleText}>Don't have an account? Sign Up!</Text>
           </TouchableOpacity>
         </>
       )}
@@ -108,18 +85,10 @@ const styles = StyleSheet.create({
   logo: {
     width: 250,
     height: 250,
-    marginBottom: 30,
+    marginBottom: 20,
   },
   loginButton: {
     marginTop: 20,
-    width: '90%',
-    backgroundColor: '#A10022',
-    padding: 15,
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  signUpButton: {
-    marginTop: 10,
     width: '90%',
     backgroundColor: '#A10022',
     padding: 15,
@@ -130,6 +99,11 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  toggleText: {
+    color: '#A10022',
+    marginTop: 20,
+    fontSize: 16,
   }
 });
 
