@@ -1,6 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image,TouchableOpacity} from 'react-native';
 import {Searchbar} from "react-native-paper";
+import CommentBox from './Comment';
+
+
 
 const HomePage = ({user}) => {
     return (
@@ -18,6 +21,9 @@ const HomePage = ({user}) => {
             </View>
             <View style={styles.content}>
                 <Text style={styles.contentText}>Your feed is empty. Start following people to see posts here!</Text>
+            </View>
+            <View style={styles.appContainer}>
+                <CommentBox />
             </View>
         </View>
     );
@@ -87,19 +93,6 @@ const styles = StyleSheet.create({
         color: '#333',
         height: 30,
     },
-    profileButton: {
-        position: 'absolute',
-        top: 30,
-        left: -160,
-        padding: 10,
-        backgroundColor: '#A10022',
-        borderRadius: 5,
-    },
-    button: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontWeight: 'bold',
-    }
 });
 
 export default HomePage;
