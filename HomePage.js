@@ -1,6 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {Searchbar} from "react-native-paper";
+import CommentBox from './Comment';
+
+
 
 const HomePage = ({user}) => {
     return (
@@ -18,6 +21,9 @@ const HomePage = ({user}) => {
             </View>
             <View style={styles.content}>
                 <Text style={styles.contentText}>Your feed is empty. Start following people to see posts here!</Text>
+            </View>
+            <View style={styles.appContainer}>
+                <CommentBox />
             </View>
         </View>
     );
@@ -87,6 +93,13 @@ const styles = StyleSheet.create({
         color: '#333',
         height: 30,
     },
+    appContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        backgroundColor: '#f5f5f5',
+      },
 });
 
 export default HomePage;
