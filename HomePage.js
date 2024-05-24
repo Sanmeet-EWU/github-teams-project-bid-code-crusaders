@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image,TouchableOpacity} from 'react-native';
 import {Searchbar} from "react-native-paper";
 import CommentBox from './Comment';
 
@@ -90,13 +90,6 @@ const styles = StyleSheet.create({
         color: '#333',
         height: 30,
     },
-    appContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-        backgroundColor: '#f5f5f5',
-      },
 });
 
 export default HomePage;

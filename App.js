@@ -3,21 +3,26 @@ import { View, StyleSheet } from 'react-native';
 import Login from './Login';
 import Register from './Register';
 import HomePage from './HomePage';
+import Profile from './Profile';
 import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [user, setUser] = useState(null);
+  const [currentView, setCurrentView]=useState('home');
 
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true);
     setUser(user);
+    setCurrentView('home');
   };
 
   const handleRegisterSuccess = (user) => {
     setIsLoggedIn(true);
     setUser(user);
+    setCurrentView('home');
+
   };
 
   const toggleRegister = () => {
@@ -27,11 +32,23 @@ export default function App() {
   const goBackToLogin = () => {
     setIsRegistering(false);
   };
+  
+  const goToProfile = () => {
+    setCurrentView('profile');
+};
+
+const goBack = () => {
+    setCurrentView('home');
+};
 
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
-        <HomePage user={user} />
+        currentView === 'home' ? (
+        <HomePage user={user}  goToProfile={goToProfile}/>
+        ): (
+          <Profile goBack={goBack} />
+        )
       ) : (
         isRegistering ? (
           <Register onRegisterSuccess={handleRegisterSuccess} goBack={goBackToLogin} /> // Pass the goBack prop
