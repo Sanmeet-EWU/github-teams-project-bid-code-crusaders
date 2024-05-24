@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image,TouchableOpacity} from 'react-native';
 import {Searchbar} from "react-native-paper";
 
 const HomePage = ({user}) => {
@@ -87,6 +87,19 @@ const styles = StyleSheet.create({
         color: '#333',
         height: 30,
     },
+    profileButton: {
+        position: 'absolute',
+        top: 30,
+        left: -160,
+        padding: 10,
+        backgroundColor: '#A10022',
+        borderRadius: 5,
+    },
+    button: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    }
 });
 
 export default HomePage;
