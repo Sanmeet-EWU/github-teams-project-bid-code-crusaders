@@ -19,9 +19,6 @@ const HomePage = ({user}) => {
                 />
                 <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
             </View>
-            <View style={styles.content}>
-                <Text style={styles.contentText}>Your feed is empty. Start following people to see posts here!</Text>
-            </View>
             <View style={styles.appContainer}>
                 <CommentBox />
             </View>
