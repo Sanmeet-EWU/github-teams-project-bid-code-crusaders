@@ -20,7 +20,10 @@ const HomePage = ({user}) => {
                 <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
             </View>
             <View style={styles.appContainer}>
-                <CommentBox />
+                <CommentBox 
+                    initialComment="Initial comment" 
+                    imageTitle="Text comment on post testing for more length" 
+                 />
             </View>
         </View>
     );

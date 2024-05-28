@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import Login from './Login';
 import Register from './Register';
 import HomePage from './HomePage';
-import Profile from './Profile';
 import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
