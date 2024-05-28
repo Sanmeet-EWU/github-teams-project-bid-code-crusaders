@@ -3,15 +3,14 @@ import { View, StyleSheet } from 'react-native';
 import Login from './Login';
 import Register from './Register';
 import HomePage from './HomePage';
+import Profile from './Profile'; // Import Profile component
 import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [user, setUser] = useState(null);
-  const [currentView, setCurrentView]=useState('home');
-  const [currentView1, setProfile]=useState('profile');
-  
+  const [currentView, setCurrentView] = useState('home');
 
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true);
@@ -23,7 +22,6 @@ export default function App() {
     setIsLoggedIn(true);
     setUser(user);
     setCurrentView('home');
-
   };
 
   const toggleRegister = () => {
@@ -33,28 +31,34 @@ export default function App() {
   const goBackToLogin = () => {
     setIsRegistering(false);
   };
-  
+
   const goToProfile = () => {
     setCurrentView('profile');
-};
+  };
 
-const goBack = () => {
+  const goBack = () => {
     setCurrentView('home');
-};
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    setCurrentView('login');
+  };
 
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
         currentView === 'home' ? (
-        <HomePage user={user}  goToProfile={goToProfile}/>
-        ): (
-          <Profile user={user} goToProfile={goToProfile} />
+          <HomePage user={user} goToProfile={goToProfile} handleLogout={handleLogout} />
+        ) : (
+          <Profile user={user} goBack={goBack} />
         )
       ) : (
         isRegistering ? (
-          <Register onRegisterSuccess={handleRegisterSuccess} goBack={goBackToLogin} /> // Pass the goBack prop
+          <Register onRegisterSuccess={handleRegisterSuccess} goBack={goBackToLogin} />
         ) : (
-          <Login onLoginSuccess={handleLoginSuccess} onRegister={toggleRegister} /> // Pass the onRegister prop
+          <Login onLoginSuccess={handleLoginSuccess} onRegister={toggleRegister} />
         )
       )}
       <StatusBar style="auto" />
@@ -69,5 +73,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-  }
+  },
 });
