@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
 
-const CommentBox = () => {
-  const [comment, setComment] = useState('');
-  const [imageTitle, setImageTitle] = useState('Text comment on post testing for more length'); // Add a state for the text above the image
+const CommentBox = ({ initialComment, imageTitle }) => {
+  const [comment, setComment] = useState(initialComment);
 
   const handleCommentChange = (text) => {
     setComment(text);
