@@ -51,7 +51,7 @@ const Login = ({ onLoginSuccess, onRegister }) => {
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onRegister}> {/* */}
+          <TouchableOpacity onPress={onRegister}> 
             <Text style={styles.toggleText}>Don't have an account? Sign Up!</Text>
           </TouchableOpacity>
         </>

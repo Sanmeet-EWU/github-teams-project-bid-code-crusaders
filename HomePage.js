@@ -5,20 +5,20 @@ import CommentBox from './Comment';
 
 
 
-const HomePage = ({user}) => {
+const HomePage = ({user}, goToProfile) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Eagle Nest</Text>
                 <Searchbar style={styles.search} placeholder= "Search..."/>
             </View>
-            <View style={styles.userInfo}>
+            <TouchableOpacity style={styles.userInfo} onPress={goToProfile}>
                 <Image
                     source={user.avatar ? {uri: user.avatar} : require('./assets/logo.png')}
                     style={styles.avatar}
                 />
                 <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
-            </View>
+            </TouchableOpacity>
             <View style={styles.appContainer}>
                 <CommentBox />
             </View>
@@ -70,6 +70,11 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     welcomeMessage: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#333',
+    },
+    profileButton: {
         fontSize: 18,
         fontWeight: '600',
         color: '#333',

@@ -11,6 +11,8 @@ export default function App() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [user, setUser] = useState(null);
   const [currentView, setCurrentView]=useState('home');
+  const [currentView1, setProfile]=useState('profile');
+  
 
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true);
@@ -45,9 +47,9 @@ const goBack = () => {
     <View style={styles.container}>
       {isLoggedIn ? (
         currentView === 'home' ? (
-        <HomePage user={user}  goToProfile={goToProfile}/>
+        <Profile user={user}  goToProfile={goToProfile}/>
         ): (
-          <Profile goBack={goBack} />
+          <Profile user={user} goToProfile={goToProfile} />
         )
       ) : (
         isRegistering ? (
