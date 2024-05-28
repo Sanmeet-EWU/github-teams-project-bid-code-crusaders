@@ -23,6 +23,7 @@ const HomePage = ({user}) => {
                 <CommentBox 
                     initialComment="Initial comment" 
                     imageTitle="Text comment on post testing for more length" 
+                    imagePath="https://www.google.com/imgres?imgurl=https://i.pinimg.com/1200x/84/29/94/8429942830ee706352fa51d1af23d503.jpg&tbnid=puOSdyMJ2oPMHM&vet=1&imgrefurl=https://www.pinterest.com/pin/716987203162612721/&docid=u0EoSEIqTFuceM&w=680&h=680&source=sh/x/im/m5/1&kgs=6b37e384edc65022&shem=abme,ssim,trie"
                  />
             </View>
         </View>

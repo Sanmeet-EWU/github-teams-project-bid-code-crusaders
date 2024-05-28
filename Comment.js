@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
 
-const CommentBox = ({ initialComment, imageTitle }) => {
+const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
   const [comment, setComment] = useState(initialComment);
 
   const handleCommentChange = (text) => {
@@ -20,10 +20,10 @@ const CommentBox = ({ initialComment, imageTitle }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.imageTitle}>{imageTitle}</Text> {/* Add the text above the image */}
+      <Text style={styles.imageTitle}>{imageTitle}</Text>
       <Image 
         style={styles.image}
-        source={{ uri: 'https://i9.ytimg.com/vi_webp/3syWQtsO7sA/maxresdefault.webp?v=6636b856&sqp=CJidw7IG&rs=AOn4CLB_iraAId30NalyO5cEnuBc_YnyYQ' }} 
+        source={{ uri: imagePath }} 
       />
       <TextInput
         style={styles.input}
