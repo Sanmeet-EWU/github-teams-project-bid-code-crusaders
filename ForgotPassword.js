@@ -1,42 +1,53 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Platform, Image } from 'react-native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 
 const ForgotPassword = ({ goBack }) => {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleResetPassword = () => {
-    if (email) {
-      sendPasswordResetEmail(FIREBASE_AUTH, email)
-        .then(() => {
-          Alert.alert('Password reset email sent!', 'Please check your email to reset your password.');
-          goBack();
-        })
-        .catch((error) => {
-          console.log(error);
-          Alert.alert('Error', error.message);
-        });
-    } else {
-      Alert.alert('Please enter your email address.');
+  const handleResetPassword = async () => {
+    if (email.trim() === '') {
+      Alert.alert('Error', 'Please enter your email address.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(FIREBASE_AUTH, email);
+      Alert.alert('Success', 'Password reset email sent! Please check your email.');
+      setEmail('');
+      goBack();
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={goBack} style={styles.backButton}>
+        <Text style={styles.backButtonText}>Back</Text>
+      </TouchableOpacity>
+      <Image
+        source={require('./assets/logo.png')}
+        style={styles.logo}
+      />
       <Text style={styles.title}>Reset Password</Text>
+      <Text style={styles.subtitle}>Enter your email address to reset your password.</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your email address"
+        placeholder="Email"
         onChangeText={setEmail}
         value={email}
         placeholderTextColor="#666"
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
-      <TouchableOpacity style={styles.resetButton} onPress={handleResetPassword}>
-        <Text style={styles.buttonText}>Send Reset Email</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={goBack}>
-        <Text style={styles.goBackText}>Back to Login</Text>
+      <TouchableOpacity style={styles.resetButton} onPress={handleResetPassword} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? 'Sending...' : 'Send Reset Email'}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -50,13 +61,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  backButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 30,
+    left: 20,
+    padding: 10,
+    backgroundColor: '#A10022',
+    borderRadius: 5,
+  },
+  backButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
   title: {
     fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
   input: {
     height: 50,
-    width: '120%',
+    width: '90%',
     marginVertical: 10,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -80,11 +118,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  goBackText: {
-    color: '#A10022',
-    marginTop: 20,
-    fontSize: 16,
   },
 });
 

@@ -3,14 +3,15 @@ import { View, StyleSheet } from 'react-native';
 import Login from './Login';
 import Register from './Register';
 import HomePage from './HomePage';
-import Profile from './Profile'; // Import Profile component
+import Profile from './Profile';
+import ForgotPassword from './ForgotPassword';
 import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [user, setUser] = useState(null);
-  const [currentView, setCurrentView] = useState('home');
+  const [currentView, setCurrentView] = useState('login');
 
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true);
@@ -30,6 +31,7 @@ export default function App() {
 
   const goBackToLogin = () => {
     setIsRegistering(false);
+    setCurrentView('login');
   };
 
   const goToProfile = () => {
@@ -40,17 +42,15 @@ export default function App() {
     setCurrentView('home');
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUser(null);
-    setCurrentView('login');
+  const goToForgotPassword = () => {
+    setCurrentView('forgotPassword');
   };
 
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
         currentView === 'home' ? (
-          <HomePage user={user} goToProfile={goToProfile} handleLogout={handleLogout} />
+          <HomePage user={user} goToProfile={goToProfile} />
         ) : (
           <Profile user={user} goBack={goBack} />
         )
@@ -58,7 +58,15 @@ export default function App() {
         isRegistering ? (
           <Register onRegisterSuccess={handleRegisterSuccess} goBack={goBackToLogin} />
         ) : (
-          <Login onLoginSuccess={handleLoginSuccess} onRegister={toggleRegister} />
+          currentView === 'forgotPassword' ? (
+            <ForgotPassword goBack={goBackToLogin} />
+          ) : (
+            <Login
+              onLoginSuccess={handleLoginSuccess}
+              onRegister={toggleRegister}
+              onForgotPassword={goToForgotPassword}
+            />
+          )
         )
       )}
       <StatusBar style="auto" />
@@ -73,5 +81,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-  },
+  }
 });
+
