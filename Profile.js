@@ -7,7 +7,7 @@ import CommentBox from './Comment';
 /*var images = 
 [
     require('./assets/Lane.png'),
-    require('./assets/Lane.png'),
+    require('./assets/Lane.png'),f
     require('./assets/Lane.png'),
     require('./assets/Lane.png'),
     reuqire('./assets/Lane.png'),
