@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Image, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, TextInput, Image, View, Text, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-const Login = ({ onLoginSuccess, onRegister }) => {
+const Login = ({ onLoginSuccess, onRegister, onForgotPassword }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,32 +29,37 @@ const Login = ({ onLoginSuccess, onRegister }) => {
         source={require('./assets/logo.png')}
         style={styles.logo}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={setEmail}
-        value={email}
-        placeholderTextColor="#666"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={setPassword}
-        value={password}
-        placeholderTextColor="#666"
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          onChangeText={setEmail}
+          value={email}
+          placeholderTextColor="#666"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          onChangeText={setPassword}
+          value={password}
+          placeholderTextColor="#666"
+        />
+      </View>
       {loading ? (
         <ActivityIndicator size="large" color="#A10022" />
       ) : (
-        <>
+        <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onRegister}> {/* */}
-            <Text style={styles.toggleText}>Don't have an account? Sign Up!</Text>
+          <TouchableOpacity onPress={onRegister}>
+            <Text style={styles.toggleText}>Don't have an account? <Text style={styles.linkText}>Sign Up!</Text></Text>
           </TouchableOpacity>
-        </>
+          <TouchableOpacity onPress={onForgotPassword}>
+            <Text style={styles.linkText}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -68,9 +73,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  inputContainer: {
+    width: '90%',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   input: {
     height: 50,
-    width: '90%',
+    width: '100%',
     marginVertical: 10,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -83,17 +93,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   logo: {
-    width: 250,
-    height: 250,
-    marginBottom: 20,
+    width: 200,
+    height: 200,
+    marginBottom: 30,
+  },
+  buttonContainer: {
+    width: '90%',
+    alignItems: 'center',
   },
   loginButton: {
-    marginTop: 20,
-    width: '90%',
+    width: '100%',
     backgroundColor: '#A10022',
     padding: 15,
     alignItems: 'center',
     borderRadius: 5,
+    marginBottom: 20,
   },
   buttonText: {
     color: '#ffffff',
@@ -101,8 +115,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   toggleText: {
+    color: '#666',
+    marginBottom: 10,
+    fontSize: 16,
+  },
+  linkText: {
     color: '#A10022',
-    marginTop: 20,
     fontSize: 16,
   }
 });

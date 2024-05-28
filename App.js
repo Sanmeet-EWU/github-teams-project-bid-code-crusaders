@@ -3,13 +3,15 @@ import { View, StyleSheet } from 'react-native';
 import Login from './Login';
 import Register from './Register';
 import HomePage from './HomePage';
+import Profile from './Profile';
+import ForgotPassword from './ForgotPassword';
 import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [user, setUser] = useState(null);
-  const [currentView, setCurrentView]=useState('home');
+  const [currentView, setCurrentView] = useState('login');
 
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true);
@@ -21,7 +23,6 @@ export default function App() {
     setIsLoggedIn(true);
     setUser(user);
     setCurrentView('home');
-
   };
 
   const toggleRegister = () => {
@@ -30,29 +31,42 @@ export default function App() {
 
   const goBackToLogin = () => {
     setIsRegistering(false);
+    setCurrentView('login');
   };
-  
+
   const goToProfile = () => {
     setCurrentView('profile');
-};
+  };
 
-const goBack = () => {
+  const goBack = () => {
     setCurrentView('home');
-};
+  };
+
+  const goToForgotPassword = () => {
+    setCurrentView('forgotPassword');
+  };
 
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
         currentView === 'home' ? (
-        <HomePage user={user}  goToProfile={goToProfile}/>
-        ): (
-          <Profile goBack={goBack} />
+          <HomePage user={user} goToProfile={goToProfile} />
+        ) : (
+          <Profile user={user} goBack={goBack} />
         )
       ) : (
         isRegistering ? (
-          <Register onRegisterSuccess={handleRegisterSuccess} goBack={goBackToLogin} /> // Pass the goBack prop
+          <Register onRegisterSuccess={handleRegisterSuccess} goBack={goBackToLogin} />
         ) : (
-          <Login onLoginSuccess={handleLoginSuccess} onRegister={toggleRegister} /> // Pass the onRegister prop
+          currentView === 'forgotPassword' ? (
+            <ForgotPassword goBack={goBackToLogin} />
+          ) : (
+            <Login
+              onLoginSuccess={handleLoginSuccess}
+              onRegister={toggleRegister}
+              onForgotPassword={goToForgotPassword}
+            />
+          )
         )
       )}
       <StatusBar style="auto" />
@@ -69,3 +83,4 @@ const styles = StyleSheet.create({
     padding: 20,
   }
 });
+
