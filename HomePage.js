@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image,TouchableOpacity} from 'react-native';
-import {Searchbar} from "react-native-paper";
+import {Button, Searchbar} from "react-native-paper";
 import CommentBox from './Comment';
 
 
@@ -12,13 +12,13 @@ const HomePage = ({user}, goToProfile) => {
                 <Text style={styles.headerTitle}>Eagle Nest</Text>
                 <Searchbar style={styles.search} placeholder= "Search..."/>
             </View>
-            <TouchableOpacity style={styles.userInfo} onPress={goToProfile}>
+            <Button style={styles.userInfo} onPress={goToProfile}>
                 <Image
                     source={user.avatar ? {uri: user.avatar} : require('./assets/logo.png')}
                     style={styles.avatar}
                 />
                 <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
-            </TouchableOpacity>
+            </Button>
             <View style={styles.appContainer}>
                 <CommentBox 
                     initialComment="Initial comment" 

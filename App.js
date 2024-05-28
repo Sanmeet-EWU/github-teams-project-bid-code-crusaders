@@ -46,7 +46,7 @@ const goBack = () => {
     <View style={styles.container}>
       {isLoggedIn ? (
         currentView === 'home' ? (
-        <Profile user={user}  goToProfile={goToProfile}/>
+        <HomePage user={user}  goToProfile={goToProfile}/>
         ): (
           <Profile user={user} goToProfile={goToProfile} />
         )
