@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import CommentBox from './Comment';
+import SearchBar from "./Search";
 
 const HomePage = ({ user, goToProfile, handleLogout }) => {
   const [isTabOpen, setIsTabOpen] = useState(false);
@@ -30,7 +31,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
       <View style={styles.mainContent}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Eagle Nest</Text>
-          <Searchbar style={styles.search} placeholder="Search..." />
+          <SearchBar placeholder="Search..." />
         </View>
         <View style={styles.userInfo}>
           <Image

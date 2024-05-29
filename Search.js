@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {StyleSheet} from "react-native";
 
 
 const SearchBar = ({ data }) => {
@@ -19,12 +20,13 @@ const SearchBar = ({ data }) => {
     return (
         <div>
             <input
+                style={styles.input}
                 type="text"
                 value={query}
                 onChange={handleInputChange}
                 placeholder="Search..."
             />
-            <button onClick={search}>Search </button>
+            <button style={styles.button} onClick={search}>Go </button>
 
             <ul>
                 {searchResults.map((result, index) => (
@@ -34,5 +36,10 @@ const SearchBar = ({ data }) => {
         </div>
     );
 };
+const styles = StyleSheet.create({
+input:{
+    fontSize:12,
+},
+});
 
 export default SearchBar;
