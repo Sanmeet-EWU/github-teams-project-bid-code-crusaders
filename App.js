@@ -47,11 +47,17 @@ export default function App() {
     setCurrentView('forgotPassword');
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    setCurrentView('login');
+  }
+
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
         currentView === 'home' ? (
-          <HomePage user={user} goToProfile={goToProfile} />
+          <HomePage user={user} goToProfile={goToProfile} handleLogout={handleLogout}/>
         ) : (
           <Profile user={user} goBack={goBack} />
         )
