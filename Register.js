@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Image, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { FIREBASE_AUTH } from './FirebaseConfig';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
 
 const Register = ({ onRegisterSuccess, goBack }) => {
     const [firstName, setFirstName] = useState('');
@@ -22,72 +22,80 @@ const Register = ({ onRegisterSuccess, goBack }) => {
             } else {
                 const response = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(response.user, {
-                displayName: `${firstName} ${lastName}`
-        });
-        console.log(response);
-        alert('Sign up successful! Please check your email to verify your account.');
-        onRegisterSuccess(response.user); // Call the onRegisterSuccess function passed as a prop
-        }
-    } catch (error) {
-        console.log(error);
-        alert('Sign up failed: ' + error.message);
+                    displayName: `${firstName} ${lastName}`
+                });
+                await sendEmailVerification(response.user);
+                console.log(response);
+                alert('Sign up successful! Please check your email to verify your account.');
+                // Check email verification status in a loop until verified (simple approach)
+                const intervalId = setInterval(async () => {
+                    await response.user.reload();
+                    if (response.user.emailVerified) {
+                        clearInterval(intervalId);
+                        onRegisterSuccess(response.user); // Call the onRegisterSuccess function passed as a prop
+                    }
+                }, 1000); // Check every second
+            }
+        } catch (error) {
+            console.log(error);
+            alert('Sign up failed: ' + error.message);
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     };
 
     return (
         <View style={styles.container}>
-        <TouchableOpacity onPress={goBack} style={styles.backButton}>
-            <Text style={styles.backButtonText}>Back</Text>
-        </TouchableOpacity>
-        <Image
-            source={require('./assets/logo.png')}
-            style={styles.logo}
-        />
-        <TextInput
-            style={styles.input}
-            placeholder="First Name"
-            onChangeText={setFirstName}
-            value={firstName}
-            placeholderTextColor="#666"
-        />
-        <TextInput
-            style={styles.input}
-            placeholder="Last Name"
-            onChangeText={setLastName}
-            value={lastName}
-            placeholderTextColor="#666"
-        />
-        <TextInput
-            style={styles.input}
-            placeholder="Email"
-            onChangeText={setEmail}
-            value={email}
-            placeholderTextColor="#666"
-            keyboardType="email-address"
-            autoCapitalize="none"
-        />
-        <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry={true}
-            onChangeText={setPassword}
-            value={password}
-            placeholderTextColor="#666"
-        />
-        {loading ? (
-            <ActivityIndicator size="large" color="#A10022" />
-        ) : (
-            <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+            <TouchableOpacity onPress={goBack} style={styles.backButton}>
+                <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
-        )}
+            <Image
+                source={require('./assets/logo.png')}
+                style={styles.logo}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="First Name"
+                onChangeText={setFirstName}
+                value={firstName}
+                placeholderTextColor="#666"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Last Name"
+                onChangeText={setLastName}
+                value={lastName}
+                placeholderTextColor="#666"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                onChangeText={setEmail}
+                value={email}
+                placeholderTextColor="#666"
+                keyboardType="email-address"
+                autoCapitalize="none"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry={true}
+                onChangeText={setPassword}
+                value={password}
+                placeholderTextColor="#666"
+            />
+            {loading ? (
+                <ActivityIndicator size="large" color="#A10022" />
+            ) : (
+                <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
+                    <Text style={styles.buttonText}>Sign Up</Text>
+                </TouchableOpacity>
+            )}
         </View>
     );
-    };
+};
 
-    const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f0f0f0',
@@ -140,7 +148,6 @@ const Register = ({ onRegisterSuccess, goBack }) => {
         fontSize: 16,
         fontWeight: 'bold',
     }
-    });
+});
 
-    export default Register;
-
+export default Register;
