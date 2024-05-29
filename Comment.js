@@ -3,25 +3,32 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, Image, FlatList } fro
 
 const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
   const [comment, setComment] = useState(initialComment);
+  const [email, setEmail] = useState('');
   const [comments, setComments] = useState([]);
 
   const handleCommentChange = (text) => {
     setComment(text);
   };
 
+  const handleEmailChange = (text) => {
+    setEmail(text);
+  };
+
   const handleSubmit = () => {
-    if (comment.trim()) {
-      setComments([...comments, comment]); // Add the new comment to the comments list
+    if (comment.trim() && email.trim()) {
+      const username = email.substring(0, email.indexOf('@'));
+      setComments([...comments, { username, text: comment }]); // Add the new comment to the comments list
       Alert.alert('Comment Submitted', comment);
       setComment(''); // Clear the input field after submission
+      setEmail(''); // Clear the email field after submission
     } else {
-      Alert.alert('Error', 'Comment cannot be empty');
+      Alert.alert('Error', 'Both email and comment cannot be empty');
     }
   };
 
   const renderComment = ({ item }) => (
     <View style={styles.comment}>
-      <Text>{item}</Text>
+      <Text style={styles.commentText}><Text style={styles.commentUsername}>{item.username}: </Text>{item.text}</Text>
     </View>
   );
 
@@ -37,6 +44,12 @@ const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
         renderItem={renderComment}
         keyExtractor={(item, index) => index.toString()}
         style={styles.commentsList}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={handleEmailChange}
       />
       <TextInput
         style={styles.input}
@@ -64,7 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign: 'center', // Center align the text
+    textAlign: 'center',
   },
   image: {
     width: '100%',
@@ -79,8 +92,14 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
   },
+  commentText: {
+    fontSize: 16,
+  },
+  commentUsername: {
+    fontWeight: 'bold',
+  },
   input: {
-    height: 60,
+    height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
