@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, Image, FlatList } from 'react-native';
 
 const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
   const [comment, setComment] = useState(initialComment);
+  const [comments, setComments] = useState([]);
 
   const handleCommentChange = (text) => {
     setComment(text);
@@ -10,7 +11,7 @@ const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
 
   const handleSubmit = () => {
     if (comment.trim()) {
-      // Handle the comment submission logic here
+      setComments([...comments, comment]); // Add the new comment to the comments list
       Alert.alert('Comment Submitted', comment);
       setComment(''); // Clear the input field after submission
     } else {
@@ -18,12 +19,24 @@ const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
     }
   };
 
+  const renderComment = ({ item }) => (
+    <View style={styles.comment}>
+      <Text>{item}</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.imageTitle}>{imageTitle}</Text>
       <Image 
         style={styles.image}
         source={{ uri: imagePath }} 
+      />
+      <FlatList
+        data={comments}
+        renderItem={renderComment}
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.commentsList}
       />
       <TextInput
         style={styles.input}
@@ -57,6 +70,14 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     marginBottom: 10,
+  },
+  commentsList: {
+    marginBottom: 10,
+  },
+  comment: {
+    padding: 10,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
   },
   input: {
     height: 60,
