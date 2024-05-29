@@ -57,7 +57,8 @@ const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
         value={comment}
         onChangeText={handleCommentChange}
       />
-      <Button title="Comment" onPress={handleSubmit} />
+      <Button style={styles.button}
+              title="Comment" onPress={handleSubmit} />
     </View>
   );
 };
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   imageTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
@@ -105,6 +106,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  button:{
+    color: '#A10022',
   },
 });
 
