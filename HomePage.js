@@ -40,7 +40,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
           <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
         </View>
         <View style={styles.appContainer}>
-          <CommentBox initialComment="" imageTitle="Post and comment tester" imagePath="https://static.miraheze.org/greatcharacterswiki/thumb/d/df/516-5164386_vegeta-ssj-blue-png-transparent-png.png/640px-516-5164386_vegeta-ssj-blue-png-transparent-png.png" username={user.username} />
+          <CommentBox initialComment="" imageTitle="Post and comment tester" imagePath="https://static.miraheze.org/greatcharacterswiki/thumb/d/df/516-5164386_vegeta-ssj-blue-png-transparent-png.png/640px-516-5164386_vegeta-ssj-blue-png-transparent-png.png" username={user.email} />
         </View>
       </View>
     </View>
