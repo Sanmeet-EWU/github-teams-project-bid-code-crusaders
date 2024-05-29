@@ -1,34 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, Image, FlatList } from 'react-native';
 
-const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
+const CommentBox = ({ initialComment, imageTitle, imagePath, username }) => {
   const [comment, setComment] = useState(initialComment);
-  const [email, setEmail] = useState('');
   const [comments, setComments] = useState([]);
 
   const handleCommentChange = (text) => {
     setComment(text);
   };
 
-  const handleEmailChange = (text) => {
-    setEmail(text);
-  };
-
   const handleSubmit = () => {
-    if (comment.trim() && email.trim()) {
-      const username = email.substring(0, email.indexOf('@'));
+    if (comment.trim()) {
       setComments([...comments, { username, text: comment }]); // Add the new comment to the comments list
       Alert.alert('Comment Submitted', comment);
       setComment(''); // Clear the input field after submission
-      setEmail(''); // Clear the email field after submission
     } else {
-      Alert.alert('Error', 'Both email and comment cannot be empty');
+      Alert.alert('Error', 'Comment cannot be empty');
     }
   };
 
   const renderComment = ({ item }) => (
     <View style={styles.comment}>
-      <Text style={styles.commentText}><Text style={styles.commentUsername}>{item.username}: </Text>{item.text}</Text>
+      <Text style={styles.commentText}>
+        <Text style={styles.commentUsername}>{item.username}: </Text>
+        {item.text}
+      </Text>
     </View>
   );
 
@@ -47,18 +43,15 @@ const CommentBox = ({ initialComment, imageTitle, imagePath }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={handleEmailChange}
-      />
-      <TextInput
-        style={styles.input}
         placeholder="Write a comment..."
         value={comment}
         onChangeText={handleCommentChange}
       />
       <Button
-          style={styles.button} title="Comment" onPress={handleSubmit} />
+        style={styles.button}
+        title="Comment"
+        onPress={handleSubmit}
+      />
     </View>
   );
 };
@@ -82,7 +75,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: '100%',
+    height: 200,
     marginBottom: 10,
   },
   commentsList: {
@@ -107,7 +100,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
-  button:{
+  button: {
     backgroundColor: '#A10022',
   },
 });
