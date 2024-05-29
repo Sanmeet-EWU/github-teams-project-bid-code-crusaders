@@ -40,7 +40,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
           <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
         </View>
         <View style={styles.appContainer}>
-          <CommentBox initialComment="Initial comment" imageTitle="Text comment on post testing for more length" imagePath="https://static.miraheze.org/greatcharacterswiki/thumb/d/df/516-5164386_vegeta-ssj-blue-png-transparent-png.png/640px-516-5164386_vegeta-ssj-blue-png-transparent-png.png" />
+          <CommentBox initialComment="Leave a comment" imageTitle="Post and comment tester" imagePath="https://static.miraheze.org/greatcharacterswiki/thumb/d/df/516-5164386_vegeta-ssj-blue-png-transparent-png.png/640px-516-5164386_vegeta-ssj-blue-png-transparent-png.png" />
         </View>
       </View>
     </View>
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#333',
     height: 30,
+
   },
   appContainer: {
     flex: 1,
