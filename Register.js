@@ -4,6 +4,7 @@ import { FIREBASE_AUTH } from './FirebaseConfig';
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
 
 const Register = ({ onRegisterSuccess, goBack }) => {
+    const [username, setUsername] = useState(''); // State for username
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -22,7 +23,8 @@ const Register = ({ onRegisterSuccess, goBack }) => {
             } else {
                 const response = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(response.user, {
-                    displayName: `${firstName} ${lastName}`
+                    displayName: `${firstName} ${lastName}`,
+                    photoURL: `https://example.com/${username}` // Optional: Include a URL based on username
                 });
                 await sendEmailVerification(response.user);
                 console.log(response);
@@ -52,6 +54,13 @@ const Register = ({ onRegisterSuccess, goBack }) => {
             <Image
                 source={require('./assets/logo.png')}
                 style={styles.logo}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Username"
+                onChangeText={setUsername}
+                value={username}
+                placeholderTextColor="#666"
             />
             <TextInput
                 style={styles.input}
@@ -151,3 +160,4 @@ const styles = StyleSheet.create({
 });
 
 export default Register;
+
