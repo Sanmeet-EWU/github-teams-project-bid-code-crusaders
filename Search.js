@@ -43,7 +43,7 @@ const SearchBar = ({ data }) => {
 const styles = StyleSheet.create({
     input: {
         height: 30,
-        width: 175,
+        width: 200,
         marginVertical: 10,
         borderWidth: 1,
         borderColor: '#ccc',

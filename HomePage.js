@@ -100,11 +100,11 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     flex: 1,
-    padding: 20,
+    padding: 15,
   },
   header: {
-    paddingTop: 50,
-    paddingBottom: 16,
+    paddingTop: 35,
+    paddingBottom: 5,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     borderBottomWidth: 1,
