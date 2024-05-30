@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {StyleSheet} from "react-native";
+import {ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 
 
 const SearchBar = ({ data }) => {
@@ -19,14 +19,18 @@ const SearchBar = ({ data }) => {
 
     return (
         <div>
-            <input
+            <View style={styles.inputContainer}>
+            <TextInput
                 style={styles.input}
                 type="text"
                 value={query}
                 onChange={handleInputChange}
                 placeholder="Search..."
             />
-            <button style={styles.button} onClick={search}>Go </button>
+            <TouchableOpacity style={styles.searchButton} onPress={search}>
+                <Text style={styles.buttonText}>Go</Text>
+            </TouchableOpacity>
+            </View>
 
             <ul>
                 {searchResults.map((result, index) => (
@@ -37,9 +41,42 @@ const SearchBar = ({ data }) => {
     );
 };
 const styles = StyleSheet.create({
-input:{
-    fontSize:12,
-},
+    input: {
+        height: 30,
+        width: 175,
+        marginVertical: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    buttonText: {
+        color: '#ffffff',
+        fontSize: 14,
+        fontWeight: 'normal',
+    },
+    searchButton: {
+        width: 40,
+        height:30,
+        backgroundColor: '#a10022',
+        padding: 5,
+        alignItems: "center",
+        borderRadius: 5,
+        marginTop:10,
+    },
+    inputContainer: {
+        width: '100%',
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "inline-flex",
+        justifyContent: "center",
+        marginBottom: 20,
+    },
 });
 
 export default SearchBar;
