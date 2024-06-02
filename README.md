@@ -1,7 +1,11 @@
-<<<<<<< HEAD
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/32B92nwd)
-We are the code crusaders
-=======
--EagleNest Project-
-Social Media app for professors and students
->>>>>>> d22a9d1c69f094e2ee7ece499ec2250ee5c48952
+EagleNest Social media app for professors and student <br />
+Manual:<br />
+Install VSCode<br />
+Install React Native<br />
+Install Yarn<br />
+Install Expo<br />
+Install Node.js<br />
+There may be more dependencies you need to install to get this to work.<br />
+Open up a terminal in VSCode, run the application with npx expo start<br />
+Wait for expo, then after it has started press 'w' in the terminal window to open up a web application<br />
+EagleNest should show up in a window running on localhost

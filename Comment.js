@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 275,
     marginBottom: 10,
   },
   commentsList: {
@@ -99,9 +99,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
-  },
-  button: {
-    backgroundColor: '#A10022',
   },
 });
 
