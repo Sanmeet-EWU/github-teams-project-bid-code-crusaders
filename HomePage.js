@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
-import { Searchbar } from 'react-native-paper';
 import CommentBox from './Comment';
 import SearchBar from "./Search";
 
@@ -41,7 +40,11 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
           <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
         </View>
         <View style={styles.appContainer}>
-          <CommentBox initialComment="" imageTitle="Post and comment tester" imagePath="https://static.miraheze.org/greatcharacterswiki/thumb/d/df/516-5164386_vegeta-ssj-blue-png-transparent-png.png/640px-516-5164386_vegeta-ssj-blue-png-transparent-png.png" username={user.email} />
+          <CommentBox initialComment="" imageTitle="Congratulations to Our 2024 Graduates!" imagePath="https://in.ewu.edu/wp-content/uploads/2019/06/2019-Graduation-1024x443.jpg" username={user.email} />
+        </View>
+        <View style={styles.appContainer}>
+          <CommentBox initialComment="" imageTitle="Don't Miss This Weekends Sporting Events!" imagePath="https://goeags.com/images/2020/3/31/20atZoomBackgroundSwoop2.jpg"
+                      imageCaption= "Come out to cheer on our Football and Tennis teams Friday 6/7 and Saturday 6/8!" username={user.email} />
         </View>
       </View>
     </View>

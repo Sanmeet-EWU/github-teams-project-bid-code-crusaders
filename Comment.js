@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, Image, FlatList } from 'react-native';
 
-const CommentBox = ({ initialComment, imageTitle, imagePath, username }) => {
+const CommentBox = ({ initialComment, imageTitle, imagePath, imageCaption, username }) => {
   const [comment, setComment] = useState(initialComment);
   const [comments, setComments] = useState([]);
 
@@ -35,6 +35,7 @@ const CommentBox = ({ initialComment, imageTitle, imagePath, username }) => {
         style={styles.image}
         source={{ uri: imagePath }} 
       />
+      <Text style={styles.imageCaption}>{imageCaption}</Text>
       <FlatList
         data={comments}
         renderItem={renderComment}
@@ -72,6 +73,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
+  },
+  imageCaption:{
+    fontsize: 14,
+    fontWeight: 'normal',
+    textAlign: 'left',
   },
   image: {
     width: '100%',

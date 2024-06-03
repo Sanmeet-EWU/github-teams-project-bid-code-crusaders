@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 
-const Profile = ({ user, goBack }) => {
+const Profile = ({ user, goBack, goToNewPost }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -39,7 +39,7 @@ const Profile = ({ user, goBack }) => {
           <TouchableOpacity>
             <Image source={require('./assets/app-outline.png')} style={styles.appOutline} />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={goToNewPost}>
             <Image source={require('./assets/app-outline.png')} style={styles.appOutline} />
           </TouchableOpacity>
           <TouchableOpacity>

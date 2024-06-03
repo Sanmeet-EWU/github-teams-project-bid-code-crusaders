@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Image, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { FIREBASE_AUTH } from './FirebaseConfig';
+import { FIREBASE_AUTH,FIRESTORE_DB } from './FirebaseConfig';
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
-
+import {setDoc,doc} from 'firebase/firestore';
 const Register = ({ onRegisterSuccess, goBack }) => {
     const [username, setUsername] = useState(''); // State for username
     const [firstName, setFirstName] = useState('');
@@ -24,10 +24,23 @@ const Register = ({ onRegisterSuccess, goBack }) => {
                 const response = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(response.user, {
                     displayName: `${firstName} ${lastName}`,
-                    photoURL: `https://example.com/${username}` // Optional: Include a URL based on username
+                   
                 });
                 await sendEmailVerification(response.user);
                 console.log(response);
+                await setDoc(doc(FIRESTORE_DB,'users',response.user.uid),{
+                uid: response.user.uid,
+                email: response.user.email,
+                fireName: firstName,
+                lastName: lastName,
+                username: username,
+
+
+                });
+
+
+
+
                 alert('Sign up successful! Please check your email to verify your account.');
                 // Check email verification status in a loop until verified (simple approach)
                 const intervalId = setInterval(async () => {
