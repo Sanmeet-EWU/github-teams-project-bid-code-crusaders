@@ -17,6 +17,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [currentView, setCurrentView] = useState('login');
   const [previousView, setPreviousView] = useState(null);
+  const [isRegistering, setIsRegistering] = useState(false); 
 
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true);
@@ -32,6 +33,7 @@ export default function App() {
 
   const toggleRegister = () => {
     setIsRegistering(!isRegistering);
+    setCurrentView('register');
   };
 
   const goBackToLogin = () => {
