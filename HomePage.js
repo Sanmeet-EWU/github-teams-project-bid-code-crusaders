@@ -1,13 +1,55 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Modal, TextInput, Button, Alert, ScrollView } from 'react-native';
+import { collection, addDoc, getDocs, serverTimestamp } from 'firebase/firestore';
+import { FIRESTORE_DB } from './FirebaseConfig';
 import CommentBox from './Comment';
 import SearchBar from "./Search";
 
 const HomePage = ({ user, goToProfile, handleLogout }) => {
   const [isTabOpen, setIsTabOpen] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newImageTitle, setNewImageTitle] = useState('');
+  const [newImageCaption, setNewImageCaption] = useState('');
+  const [newImagePath, setNewImagePath] = useState('');
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    const postsSnapshot = await getDocs(collection(FIRESTORE_DB, 'posts'));
+    const postsList = postsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setPosts(postsList);
+  };
 
   const toggleTab = () => {
     setIsTabOpen(!isTabOpen);
+  };
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
+  const handleSubmitPost = async () => {
+    if (newImageTitle.trim() && newImagePath.trim()) {
+      const newPost = {
+        imageTitle: newImageTitle,
+        imagePath: newImagePath,
+        imageCaption: newImageCaption,
+        username: user.email,
+        createdAt: serverTimestamp()
+      };
+      await addDoc(collection(FIRESTORE_DB, 'posts'), newPost);
+      fetchPosts();
+      setNewImageTitle('');
+      setNewImageCaption('');
+      setNewImagePath('');
+      toggleModal();
+      Alert.alert('Success', 'Post has been added!');
+    } else {
+      Alert.alert('Error', 'Please fill out all required fields.');
+    }
   };
 
   return (
@@ -27,7 +69,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
           </View>
         )}
       </View>
-      <View style={styles.mainContent}>
+      <ScrollView style={styles.mainContent}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Eagle Nest</Text>
           <SearchBar placeholder="Search..." />
@@ -39,14 +81,54 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
           />
           <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
         </View>
-        <View style={styles.appContainer}>
-          <CommentBox initialComment="" imageTitle="Congratulations to Our 2024 Graduates!" imagePath="https://in.ewu.edu/wp-content/uploads/2019/06/2019-Graduation-1024x443.jpg" username={user.email} />
+        <Button title="Add Post" onPress={toggleModal} />
+        {posts.map((post, index) => (
+          <View key={index} style={styles.appContainer}>
+            <CommentBox
+              initialComment=""
+              imageTitle={post.imageTitle}
+              imagePath={post.imagePath}
+              imageCaption={post.imageCaption}
+              username={post.username}
+            />
+          </View>
+        ))}
+      </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add a New Post</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Image Title"
+              value={newImageTitle}
+              onChangeText={setNewImageTitle}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Image Caption"
+              value={newImageCaption}
+              onChangeText={setNewImageCaption}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Image URL"
+              value={newImagePath}
+              onChangeText={setNewImagePath}
+            />
+            {newImagePath ? (
+              <Image source={{ uri: newImagePath }} style={styles.previewImage} />
+            ) : null}
+            <Button title="Submit" onPress={handleSubmitPost} />
+            <Button title="Cancel" onPress={toggleModal} />
+          </View>
         </View>
-        <View style={styles.appContainer}>
-          <CommentBox initialComment="" imageTitle="Don't Miss This Weekends Sporting Events!" imagePath="https://goeags.com/images/2020/3/31/20atZoomBackgroundSwoop2.jpg"
-                      imageCaption= "Come out to cheer on our Football and Tennis teams Friday 6/7 and Saturday 6/8!" username={user.email} />
-        </View>
-      </View>
+      </Modal>
     </View>
   );
 };
@@ -149,15 +231,40 @@ const styles = StyleSheet.create({
     color: '#333',
     flex: 1,
   },
-  search: {
-    fontSize: 12,
-    color: '#333',
-    height: 30,
-
-  },
   appContainer: {
     flex: 1,
     padding: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    width: width * 0.8,
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    width: '100%',
+    padding: 10,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  previewImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 10,
   },
 });
 
