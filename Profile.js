@@ -28,7 +28,7 @@ const Profile = ({ user, goBack, goToNewPost, goToPostHistory, goToEditProfile, 
 
     const fetchPosts = async () => {
       try {
-        const q = query(collection(FIRESTORE_DB, 'posts'), where('uid', '==', user.uid));
+        const q = query(collection(FIRESTORE_DB, 'profileposts'), where('uid', '==', user.uid));
         const querySnapshot = await getDocs(q);
         const userPosts = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         setPosts(userPosts);

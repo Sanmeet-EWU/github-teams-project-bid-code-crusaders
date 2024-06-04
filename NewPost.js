@@ -25,7 +25,7 @@ const NewPost = ({ user, goBack }) => {
         image: null // If you have image functionality, update this accordingly
       };
 
-      await addDoc(collection(FIRESTORE_DB, 'posts'), newPost);
+      await addDoc(collection(FIRESTORE_DB, 'profileposts'), newPost);
       console.log('Post created successfully');
       goBack();
     } catch (error) {
