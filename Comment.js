@@ -1,21 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, Image, FlatList } from 'react-native';
+import { FIRESTORE_DB } from './FirebaseConfig'; // Import Firestore instance
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 
 const CommentBox = ({ initialComment, imageTitle, imagePath, imageCaption, username }) => {
   const [comment, setComment] = useState(initialComment);
   const [comments, setComments] = useState([]);
 
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
   const handleCommentChange = (text) => {
     setComment(text);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (comment.trim()) {
-      setComments([...comments, { username, text: comment }]); // Add the new comment to the comments list
-      Alert.alert('Comment Submitted', comment);
-      setComment(''); // Clear the input field after submission
+      try {
+        const docRef = await addDoc(collection(FIRESTORE_DB, 'comments'), {
+          username,
+          text: comment,
+          imagePath,
+          timestamp: new Date(),
+        });
+        console.log('Document written with ID: ', docRef.id);
+        setComments([...comments, { username, text: comment }]); // Add the new comment to the comments list
+        Alert.alert('Comment Submitted', comment);
+        setComment(''); // Clear the input field after submission
+      } catch (error) {
+        console.error('Error adding document: ', error);
+        Alert.alert('Error', 'Failed to submit comment');
+      }
     } else {
       Alert.alert('Error', 'Comment cannot be empty');
+    }
+  };
+
+  const fetchComments = async () => {
+    try {
+      const q = query(collection(FIRESTORE_DB, 'comments'), where('imagePath', '==', imagePath));
+      const querySnapshot = await getDocs(q);
+      const fetchedComments = [];
+      querySnapshot.forEach((doc) => {
+        fetchedComments.push(doc.data());
+      });
+      setComments(fetchedComments);
+    } catch (error) {
+      console.error('Error fetching comments: ', error);
     }
   };
 
