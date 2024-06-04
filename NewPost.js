@@ -1,12 +1,47 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, TextInput, Button, StyleSheet, ActivityIndicator,Alert,Image,TouchableOpacity } from 'react-native';
 import { FIRESTORE_DB } from './FirebaseConfig';
 import { addDoc, collection } from 'firebase/firestore';
+import * as ImagePicker from "expo-image-picker"; 
+
 
 const NewPost = ({ user, goBack }) => {
   const [postContent, setPostContent] = useState('');
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null); 
+  const [error, setError] = useState(null); 
+  // Function to pick an image from  
+    //the device's media library 
+    const pickImage = async () => { 
+      const { status } = await ImagePicker. 
+          requestMediaLibraryPermissionsAsync(); 
 
+      if (status !== "granted") { 
+
+          // If permission is denied, show an alert 
+          Alert.alert( 
+              "Permission Denied", 
+              `Sorry, we need camera  
+               roll permission to upload images.` 
+          ); 
+      } else { 
+
+          // Launch the image library and get 
+          // the selected image 
+          const result = 
+              await ImagePicker.launchImageLibraryAsync(); 
+
+          if (!result.cancelled) { 
+
+              // If an image is selected (not cancelled),  
+              // update the file state variable 
+              setFile(result.uri); 
+
+              // Clear any previous errors 
+              setError(null); 
+          } 
+      } 
+  }; 
   const createPost = async () => {
     if (postContent.trim() === '') {
       alert('Post content cannot be empty');
@@ -48,6 +83,7 @@ const NewPost = ({ user, goBack }) => {
         <ActivityIndicator size="large" color="#A10022" />
       ) : (
         <Button title="Post" onPress={createPost} />
+        
       )}
       <Button title="Back" onPress={goBack} />
     </View>
