@@ -5,7 +5,7 @@ import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firesto
 import { Button } from 'react-native-paper';
 import { format } from 'date-fns';
 
-const Profile = ({ user, goBack, goToNewPost, goToPostHistory, goToEditProfile, goToFollowers, goToFollowing }) => {
+const Profile = ({ user, goToHome, goToNewPost, goToPostHistory, goToEditProfile, goToFollowers, goToFollowing }) => {
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
@@ -44,15 +44,12 @@ const Profile = ({ user, goBack, goToNewPost, goToPostHistory, goToEditProfile, 
     fetchPosts();
   }, [user.uid]);
 
-  const handleGoBack = () => {
-    console.log('Home button pressed');
-    goBack();
-  };
+ 
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.homeButton} onPress={handleGoBack}>
+        <TouchableOpacity style={styles.homeButton} onPress={goToHome}>
           <Text style={styles.homeButtonText}>Home</Text>
         </TouchableOpacity>
         <Image
@@ -320,16 +317,3 @@ const styles = StyleSheet.create({
 });
 
 export default Profile;
-
-
-
-
-
-
-
-
-
-
-
-
-
