@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Login from './Login';
@@ -6,13 +5,18 @@ import Register from './Register';
 import HomePage from './HomePage';
 import Profile from './Profile';
 import ForgotPassword from './ForgotPassword';
+import PostHistory from './PostHistory';
+import EditProfile from './EditProfile';
+import Followers from './Followers';
+import Following from './Following';
+import NewPost from './NewPost';
 import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [user, setUser] = useState(null);
   const [currentView, setCurrentView] = useState('login');
+  const [previousView, setPreviousView] = useState(null);
 
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true);
@@ -36,11 +40,37 @@ export default function App() {
   };
 
   const goToProfile = () => {
+    setPreviousView(currentView);
     setCurrentView('profile');
   };
 
+  const goToPostHistory = () => {
+    setPreviousView(currentView);
+    setCurrentView('postHistory');
+  };
+
+  const goToEditProfile = () => {
+    setPreviousView(currentView);
+    setCurrentView('editProfile');
+  };
+
+  const goToFollowers = () => {
+    setPreviousView(currentView);
+    setCurrentView('followers');
+  };
+
+  const goToFollowing = () => {
+    setPreviousView(currentView);
+    setCurrentView('following');
+  };
+
+  const goToNewPost = () => {
+    setPreviousView(currentView);
+    setCurrentView('newPost');
+  };
+
   const goBack = () => {
-    setCurrentView('home');
+    setCurrentView(previousView || 'home');
   };
 
   const goToForgotPassword = () => {
@@ -51,29 +81,41 @@ export default function App() {
     setIsLoggedIn(false);
     setUser(null);
     setCurrentView('login');
-  }
+  };
 
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
         currentView === 'home' ? (
-          <HomePage user={user} goToProfile={goToProfile} handleLogout={handleLogout}/>
-        ) : (
-          <Profile user={user} goBack={goBack} />
-        )
+          <HomePage user={user} goToProfile={goToProfile} handleLogout={handleLogout} />
+        ) : currentView === 'profile' ? (
+          <Profile
+            user={user}
+            goBack={goBack}
+            goToPostHistory={goToPostHistory}
+            goToEditProfile={goToEditProfile}
+            goToFollowers={goToFollowers}
+            goToFollowing={goToFollowing}
+            goToNewPost={goToNewPost}
+          />
+        ) : currentView === 'postHistory' ? (
+          <PostHistory user={user} goBack={goBack} />
+        ) : currentView === 'editProfile' ? (
+          <EditProfile user={user} goBack={goBack} />
+        ) : currentView === 'followers' ? (
+          <Followers user={user} goBack={goBack} />
+        ) : currentView === 'following' ? (
+          <Following user={user} goBack={goBack} />
+        ) : currentView === 'newPost' ? (
+          <NewPost user={user} goBack={goBack} />
+        ) : null
       ) : (
-        isRegistering ? (
+        currentView === 'register' ? (
           <Register onRegisterSuccess={handleRegisterSuccess} goBack={goBackToLogin} />
+        ) : currentView === 'forgotPassword' ? (
+          <ForgotPassword goBack={goBackToLogin} />
         ) : (
-          currentView === 'forgotPassword' ? (
-            <ForgotPassword goBack={goBackToLogin} />
-          ) : (
-            <Login
-              onLoginSuccess={handleLoginSuccess}
-              onRegister={toggleRegister}
-              onForgotPassword={goToForgotPassword}
-            />
-          )
+          <Login onLoginSuccess={handleLoginSuccess} onRegister={toggleRegister} onForgotPassword={goToForgotPassword} />
         )
       )}
       <StatusBar style="auto" />
@@ -90,3 +132,8 @@ const styles = StyleSheet.create({
     padding: 20,
   }
 });
+
+
+
+
+

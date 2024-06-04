@@ -1,72 +1,129 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { FIRESTORE_DB } from './FirebaseConfig';
+import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { Button } from 'react-native-paper';
+import { format } from 'date-fns';
 
-const Profile = ({ user, goBack, goToNewPost }) => {
+const Profile = ({ user, goBack, goToNewPost, goToPostHistory, goToEditProfile, goToFollowers, goToFollowing }) => {
+  const [posts, setPosts] = useState([]);
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [postsCount, setPostsCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userDoc = await getDoc(doc(FIRESTORE_DB, 'users', user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUsername(userData.username);
+          setBio(userData.bio || '');
+        }
+      } catch (error) {
+        console.error("Error fetching user data: ", error);
+      }
+    };
+
+    const fetchPosts = async () => {
+      try {
+        const q = query(collection(FIRESTORE_DB, 'posts'), where('uid', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        const userPosts = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setPosts(userPosts);
+        setPostsCount(userPosts.length);
+      } catch (error) {
+        console.error("Error fetching posts: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+    fetchPosts();
+  }, [user.uid]);
+
+  const handleGoBack = () => {
+    console.log('Home button pressed');
+    goBack();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.homeButton} onPress={goBack}>
+        <TouchableOpacity style={styles.homeButton} onPress={handleGoBack}>
           <Text style={styles.homeButtonText}>Home</Text>
         </TouchableOpacity>
         <Image
           source={user.avatar ? { uri: user.avatar } : require('./assets/logo.png')}
           style={styles.avatar}
         />
-        <Text style={styles.headerTitle}>{user.email}</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 3, justifyContent: 'space-around' }}>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.posts}>Posts</Text>
+        <Text style={styles.headerTitle}>{username}</Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <TouchableOpacity onPress={goToPostHistory}>
+              <Text style={styles.statText}>Posts</Text>
+              <Text style={styles.statNumber}>{postsCount}</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.followers}>Followers</Text>
+          <View style={styles.statItem}>
+            <TouchableOpacity onPress={goToFollowers}>
+              <Text style={styles.statText}>Followers</Text>
+              <Text style={styles.statNumber}>0</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.following}>Following</Text>
+          <View style={styles.statItem}>
+            <TouchableOpacity onPress={goToFollowing}>
+              <Text style={styles.statText}>Following</Text>
+              <Text style={styles.statNumber}>0</Text>
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          <Button style={{ flex: 3, marginLeft: 10, justifyContent: 'center', height: 5 }}>
-            <Text>Edit Profile</Text>
-          </Button>
-        </View>
+        <Text style={styles.bio}>{bio}</Text>
+        <Button mode="contained" style={styles.editProfileButton} onPress={goToEditProfile}>
+          Edit Profile
+        </Button>
       </View>
       <View style={styles.userInfo}>
         <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-          <TouchableOpacity style={{ alignItems: 'center' }}>
-            <Image source={require('./assets/app-outline.png')} style={styles.appOutline} />
-          </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity style={{ alignItems: 'center' }} onPress={goToPostHistory}>
             <Image source={require('./assets/app-outline.png')} style={styles.appOutline} />
           </TouchableOpacity>
           <TouchableOpacity onPress={goToNewPost}>
             <Image source={require('./assets/app-outline.png')} style={styles.appOutline} />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={goToFollowers}>
+            <Image source={require('./assets/app-outline.png')} style={styles.appOutline} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={goToFollowing}>
             <Image source={require('./assets/app-outline.png')} style={styles.appOutline} />
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.userInfo}>
-        <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity style={{ alignItems: 'center' }}>
-              <Image source={require('./assets/Lane.png')} style={styles.photo} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image source={require('./assets/Emily.png')} style={styles.photo} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image source={require('./assets/Marshall.png')} style={styles.photo} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image source={require('./assets/Parker.png')} style={styles.photo} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image source={require('./assets/Chris.png')} style={styles.photo} />
-            </TouchableOpacity>
-          </View>
-        </View>
+      <View style={styles.recentPostsContainer}>
+        <Text style={styles.recentPostsTitle}>Recent Posts</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#A10022" />
+        ) : (
+          <FlatList
+            data={posts}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.postContainer}>
+                <View style={styles.postHeader}>
+                  <Image source={user.avatar ? { uri: user.avatar } : require('./assets/logo.png')} style={styles.postAvatar} />
+                  <View style={styles.postInfo}>
+                    <Text style={styles.postUser}>{username}</Text>
+                    <Text style={styles.postTimestamp}>{format(new Date(item.createdAt.toDate()), 'PPP')}</Text>
+                  </View>
+                </View>
+                <Text style={styles.postText}>{item.text}</Text>
+                {item.image && <Image source={{ uri: item.image }} style={styles.postImage} />}
+              </View>
+            )}
+          />
+        )}
       </View>
     </View>
   );
@@ -89,13 +146,44 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     shadowOpacity: 0.2,
     zIndex: 10,
-    position: 'relative', // Added to position the home button
+    position: 'relative',
   },
   headerTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
-    paddingBottom: 15,
+    paddingBottom: 10,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    paddingVertical: 10,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  statNumber: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  bio: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  editProfileButton: {
+    marginTop: 10,
+    backgroundColor: '#A10022',
+  },
+  editProfileText: {
+    color: '#FFF',
   },
   userInfo: {
     flexDirection: 'row',
@@ -175,23 +263,73 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
   },
-  content: {
+  recentPostsContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
     padding: 20,
+    marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#EBECF4',
   },
-  contentText: {
-    fontSize: 16,
-    color: '#999',
-    textAlign: 'center',
-  },
-  search: {
-    fontSize: 12,
+  recentPostsTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
     color: '#333',
-    height: 30,
+  },
+  postContainer: {
+    padding: 20,
+    backgroundColor: '#f9f9f9',
+    borderBottomWidth: 1,
+    borderBottomColor: '#EBECF4',
+    marginBottom: 10,
+  },
+  postHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  postAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  postInfo: {
+    flexDirection: 'column',
+  },
+  postUser: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  postTimestamp: {
+    fontSize: 12,
+    color: '#666',
+  },
+  postText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 10,
+  },
+  postImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
   },
 });
 
 export default Profile;
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Modal, Tex
 import { collection, addDoc, getDocs, serverTimestamp } from 'firebase/firestore';
 import { FIRESTORE_DB } from './FirebaseConfig';
 import CommentBox from './Comment';
-import SearchBar from "./Search";
+import SearchBar from './Search';
 
 const HomePage = ({ user, goToProfile, handleLogout }) => {
   const [isTabOpen, setIsTabOpen] = useState(false);
@@ -60,7 +60,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
         </TouchableOpacity>
         {isTabOpen && (
           <View style={styles.tabContainer}>
-            <TouchableOpacity style={styles.profileButton} onPress={goToProfile}>
+            <TouchableOpacity style={styles.profileButton} onPress={() => goToProfile(user.uid)}>
               <Text style={styles.profileButtonText}>Go to Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -72,7 +72,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
       <ScrollView style={styles.mainContent}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Eagle Nest</Text>
-          <SearchBar placeholder="Search..." />
+          <SearchBar onSelectUser={goToProfile} />
         </View>
         <View style={styles.userInfo}>
           <Image
@@ -231,6 +231,11 @@ const styles = StyleSheet.create({
     color: '#333',
     flex: 1,
   },
+  search: {
+    fontSize: 12,
+    color: '#333',
+    height: 30,
+  },
   appContainer: {
     flex: 1,
     padding: 20,
@@ -269,3 +274,8 @@ const styles = StyleSheet.create({
 });
 
 export default HomePage;
+
+
+
+
+
