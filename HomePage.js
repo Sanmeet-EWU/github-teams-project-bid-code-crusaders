@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
 import CommentBox from './Comment';
-import SearchBar from "./Search";
+import SearchBar from './Search';
 
 const HomePage = ({ user, goToProfile, handleLogout }) => {
   const [isTabOpen, setIsTabOpen] = useState(false);
@@ -18,7 +18,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
         </TouchableOpacity>
         {isTabOpen && (
           <View style={styles.tabContainer}>
-            <TouchableOpacity style={styles.profileButton} onPress={goToProfile}>
+            <TouchableOpacity style={styles.profileButton} onPress={() => goToProfile(user.uid)}>
               <Text style={styles.profileButtonText}>Go to Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -30,7 +30,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
       <View style={styles.mainContent}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Eagle Nest</Text>
-          <SearchBar placeholder="Search..." />
+          <SearchBar onSelectUser={goToProfile} />
         </View>
         <View style={styles.userInfo}>
           <Image
@@ -153,7 +153,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#333',
     height: 30,
-
   },
   appContainer: {
     flex: 1,
@@ -162,3 +161,8 @@ const styles = StyleSheet.create({
 });
 
 export default HomePage;
+
+
+
+
+
