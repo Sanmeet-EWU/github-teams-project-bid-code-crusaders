@@ -89,7 +89,7 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
               imageTitle={post.imageTitle}
               imagePath={post.imagePath}
               imageCaption={post.imageCaption}
-              username={post.username}
+              username={user.email}
             />
           </View>
         ))}

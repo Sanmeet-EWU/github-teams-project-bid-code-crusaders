@@ -84,7 +84,9 @@ export default function App() {
     setUser(null);
     setCurrentView('login');
   };
-
+  const goToHome = () =>{
+     setCurrentView('home');
+  };
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
@@ -93,7 +95,7 @@ export default function App() {
         ) : currentView === 'profile' ? (
           <Profile
             user={user}
-            goBack={goBack}
+            goToHome={goToHome}
             goToPostHistory={goToPostHistory}
             goToEditProfile={goToEditProfile}
             goToFollowers={goToFollowers}
