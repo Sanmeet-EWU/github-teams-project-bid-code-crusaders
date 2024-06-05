@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Modal, TextInput, Button, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, Modal, TextInput, Alert, ScrollView } from 'react-native';
 import { collection, addDoc, getDocs, serverTimestamp } from 'firebase/firestore';
 import { FIRESTORE_DB } from './FirebaseConfig';
 import CommentBox from './Comment';
@@ -81,7 +81,9 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
           />
           <Text style={styles.welcomeMessage}>Welcome back, {user.email}!</Text>
         </View>
-        <Button title="Add Post" onPress={toggleModal} />
+        <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
+          <Text style={styles.buttonText}>Add Post</Text>
+        </TouchableOpacity>
         {posts.map((post, index) => (
           <View key={index} style={styles.appContainer}>
             <CommentBox
@@ -124,8 +126,12 @@ const HomePage = ({ user, goToProfile, handleLogout }) => {
             {newImagePath ? (
               <Image source={{ uri: newImagePath }} style={styles.previewImage} />
             ) : null}
-            <Button title="Submit" onPress={handleSubmitPost} />
-            <Button title="Cancel" onPress={toggleModal} />
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmitPost}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelButton} onPress={toggleModal}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -271,9 +277,40 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 10,
   },
+  addButton: {
+    width: '90%',
+    backgroundColor: '#A10022',
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
+  submitButton: {
+    width: '100%',
+    backgroundColor: '#A10022',
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  cancelButton: {
+    width: '100%',
+    backgroundColor: '#ccc',
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default HomePage;
+
 
 
 

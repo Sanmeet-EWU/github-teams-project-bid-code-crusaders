@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, Image, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, FlatList } from 'react-native';
 import { FIRESTORE_DB } from './FirebaseConfig'; // Import Firestore instance
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 
@@ -80,11 +80,9 @@ const CommentBox = ({ initialComment, imageTitle, imagePath, imageCaption, usern
         value={comment}
         onChangeText={handleCommentChange}
       />
-      <Button
-        style={styles.button}
-        title="Comment"
-        onPress={handleSubmit}
-      />
+      <TouchableOpacity style={styles.commentButton} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Comment</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -106,10 +104,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
-  imageCaption:{
-    fontsize: 14,
+  imageCaption: {
+    fontSize: 14,
     fontWeight: 'normal',
     textAlign: 'left',
+    marginBottom: 10,
   },
   image: {
     width: '100%',
@@ -138,6 +137,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
+  commentButton: {
+    backgroundColor: '#A10022',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
 });
 
 export default CommentBox;
+
