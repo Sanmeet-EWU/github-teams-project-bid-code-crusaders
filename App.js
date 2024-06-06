@@ -11,6 +11,7 @@ import Followers from './Followers';
 import Following from './Following';
 import NewPost from './NewPost';
 import { StatusBar } from 'expo-status-bar';
+import FollowersTab from './FollowersTab';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
@@ -107,9 +108,9 @@ export default function App() {
         ) : currentView === 'editProfile' ? (
           <EditProfile user={user} goBack={goBack} />
         ) : currentView === 'followers' ? (
-          <Followers user={user} goBack={goBack} />
+          <FollowersTab user={user} goBack={goBack} />
         ) : currentView === 'following' ? (
-          <Following user={user} goBack={goBack} />
+          <FollowersTab user={user} goBack={goBack} />
         ) : currentView === 'newPost' ? (
           <NewPost user={user} goBack={goBack} />
         ) : null
