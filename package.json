@@ -46,7 +46,8 @@
     "@types/react-native": "^0.73.0"
   },
   "browser": {
-    "crypto": false
+    "crypto": false,
+    "stream": false
   },
   "private": true
 }
