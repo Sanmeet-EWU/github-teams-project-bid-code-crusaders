@@ -1,50 +1,15 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, ActivityIndicator,Alert,Image,TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, StyleSheet, ActivityIndicator, Alert, Text, Image, TouchableOpacity } from 'react-native';
 import { FIRESTORE_DB } from './FirebaseConfig';
 import { addDoc, collection } from 'firebase/firestore';
-import * as ImagePicker from "expo-image-picker"; 
-
 
 const NewPost = ({ user, goBack }) => {
   const [postContent, setPostContent] = useState('');
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState(null); 
-  const [error, setError] = useState(null); 
-  // Function to pick an image from  
-    //the device's media library 
-    const pickImage = async () => { 
-      const { status } = await ImagePicker. 
-          requestMediaLibraryPermissionsAsync(); 
 
-      if (status !== "granted") { 
-
-          // If permission is denied, show an alert 
-          Alert.alert( 
-              "Permission Denied", 
-              `Sorry, we need camera  
-               roll permission to upload images.` 
-          ); 
-      } else { 
-
-          // Launch the image library and get 
-          // the selected image 
-          const result = 
-              await ImagePicker.launchImageLibraryAsync(); 
-
-          if (!result.cancelled) { 
-
-              // If an image is selected (not cancelled),  
-              // update the file state variable 
-              setFile(result.uri); 
-
-              // Clear any previous errors 
-              setError(null); 
-          } 
-      } 
-  }; 
   const createPost = async () => {
     if (postContent.trim() === '') {
-      alert('Post content cannot be empty');
+      alert('Post cannot be empty');
       return;
     }
 
@@ -57,7 +22,8 @@ const NewPost = ({ user, goBack }) => {
         createdAt: new Date(),
         likes: [],
         comments: [],
-        image: null // If you have image functionality, update this accordingly
+        username: user.email,
+        avatar: user.avatar || null
       };
 
       await addDoc(collection(FIRESTORE_DB, 'profileposts'), newPost);
@@ -73,19 +39,33 @@ const NewPost = ({ user, goBack }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Image
+          source={user.avatar ? { uri: user.avatar } : require('./assets/logo.png')}
+          style={styles.avatar}
+        />
+        <View style={styles.headerText}>
+          <Text style={styles.username}>{user.email}</Text>
+          <Text style={styles.timestamp}>{new Date().toLocaleDateString()}</Text>
+        </View>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="What's on your mind?"
         value={postContent}
         onChangeText={setPostContent}
+        multiline
       />
       {loading ? (
         <ActivityIndicator size="large" color="#A10022" />
       ) : (
-        <Button title="Post" onPress={createPost} />
-        
+        <TouchableOpacity style={styles.postButton} onPress={createPost}>
+          <Text style={styles.postButtonText}>Post</Text>
+        </TouchableOpacity>
       )}
-      <Button title="Back" onPress={goBack} />
+      <TouchableOpacity style={styles.backButton} onPress={goBack}>
+        <Text style={styles.backButtonText}>Back</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -96,6 +76,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 20,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  headerText: {
+    flexDirection: 'column',
+  },
+  username: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  timestamp: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 2,
+  },
   input: {
     height: 100,
     borderColor: '#ccc',
@@ -104,8 +108,33 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     backgroundColor: '#fff',
-  }
+    textAlignVertical: 'top',
+  },
+  postButton: {
+    backgroundColor: '#A10022',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  postButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  backButton: {
+    backgroundColor: '#ccc',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  backButtonText: {
+    color: '#333',
+    fontSize: 16,
+  },
 });
 
 export default NewPost;
+
+
 
